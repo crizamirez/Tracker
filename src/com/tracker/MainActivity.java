@@ -3,6 +3,7 @@ package com.tracker;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -21,21 +22,26 @@ import com.tracker.EntregasModel;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends Activity {
 
 	ListView lista;
     String [] datos = {"Lista desplegable","dato_2","dato_3"};
@@ -52,8 +58,8 @@ public class MainActivity extends ListActivity {
 	    }
 		
 		lista = (ListView)findViewById(R.id.listView_pedidos);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, datos);
-        lista.setAdapter(adapter);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, datos);
+        //lista.setAdapter(adapter);
         
         Button btn = (Button) findViewById(R.id.button1);	
         btn.setOnClickListener(btnListener);
@@ -85,23 +91,28 @@ public class MainActivity extends ListActivity {
 	    		Type t = new TypeToken<EntregasModel[]>(){}.getType();
 	    		EntregasModel [] entregas = (EntregasModel[])g.fromJson(data, t);
 	    		//ListView list = getListView();
-	    		ArrayList<String> correos = new ArrayList<String>();
+	    		ArrayList<String> correos_list = new ArrayList<String>();
 	    		int i = entregas.length;
 	    		Log.e("Entregas= " , String.valueOf(i));
 	    		
 	    		for (i=0;i<entregas.length;i++){
-	    			correos.add(entregas[i].userEmail);
+	    			correos_list.add("User= " + entregas[i].userEmail + ", " + "ID Entrega= " +entregas[i].deliveryId + ", " + "\n"
+	    					+ " Estado= " + entregas[i].deliveryStatus);
+	    			//Log.e("correos=",entregas[i].userEmail);
+	    		}
+	    			    		
+	    		//int j=correos_list.size();
+	    		//Log.e("Valor de J=", String.valueOf(j));
+	    		String [] correos = new String[correos_list.size()];
+	    		
+	    		for (int k=0;k<correos_list.size();k++){
+	    			correos[k] = correos_list.get(k);
+	    			Log.e("correos["+k+"]= ",correos[k]);
 	    		}
 	    		
-	    		ListView lista2 = (ListView)findViewById(R.id.listView_pedidos);
-	            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, correos);
-	            lista2.setAdapter(adapter2);
-	    		//lista.setAdapter(new ArrayAdapter<EntregasModel>(getApplicationContext(), android.R.layout.simple_list_item_1, entregas));
-	    		//lista.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, correos));
-	    		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, correos);//(this, android.R.layout.simple_list_item_1, correos);
-	    		//setListAdapter(adapter);
-	    		//lista.setAdapter(adapter);
-	    		//adapter.notifyDataSetChanged();
+	    		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, correos);
+	    		lista.setAdapter(adapter);
+	    		
 	    		
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
@@ -136,6 +147,7 @@ public class MainActivity extends ListActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 	
 	/*public void obtenerPedidos(){
 		APICaller ap = new APICaller();
