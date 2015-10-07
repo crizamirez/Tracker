@@ -10,15 +10,15 @@
     tools:context="com.tracker.MainActivity" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnObtieneDatos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="81dp"
+        android:layout_marginTop="61dp"
         android:onClick="obtenerPedidos"
         android:text="@string/btn_obtener_datos"
-        android:textColor="#CEE3F6"/>
+        android:textColor="#CEE3F6" />
 
     <TextView
         android:id="@+id/textView1"
@@ -33,14 +33,14 @@
     <ListView
         android:id="@+id/listView_pedidos"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="35dp"
+        android:layout_height="140dp"
+        android:layout_below="@+id/btnObtieneDatos"
+        android:layout_marginTop="20dp"
         android:cacheColorHint="@android:color/background_dark"
         android:choiceMode="singleChoice"
         android:clickable="true"
-        android:visibility="visible" 
-		android:listSelector="@drawable/bkg">
+        android:listSelector="@drawable/bkg"
+        android:visibility="visible" >
 
     </ListView>
 
@@ -50,6 +50,49 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="7dp"
         android:layout_marginTop="26dp"
-        android:layout_toRightOf="@+id/button1" />
+        android:layout_toRightOf="@+id/btnObtieneDatos" />
+
+    <Button
+        android:id="@+id/btnActualiza"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listView_pedidos"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp"
+        android:onClick="generateQRCode"
+        android:text="@string/btnActualiza"
+        android:textColor="#CEE3F6" />
+
+    <TextView
+        android:id="@+id/selectedItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listView_pedidos"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="56dp"
+        android:text="@string/selectedItem"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:id="@+id/selectedItem"
+        android:layout_width="450dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="365dp"
+        android:gravity="center"
+        android:text="**NULL**"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnGetQR"
+        android:layout_marginRight="17dp"
+        android:layout_marginTop="28dp"
+        android:layout_toLeftOf="@+id/selectedItemTitle" />
 
 </RelativeLayout>

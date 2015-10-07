@@ -23,15 +23,21 @@ public final class R {
     }
     public static final class drawable {
         public static final int background_black=0x7f020000;
-        public static final int bkg=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int normal=0x7f020003;
-        public static final int pressed=0x7f020004;
+        public static final int background_white=0x7f020001;
+        public static final int bkg=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int normal=0x7f020004;
+        public static final int pressed=0x7f020005;
+        public static final int qr_pedido=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f080003;
-        public static final int button1=0x7f080000;
+        public static final int action_settings=0x7f080007;
+        public static final int btnActualiza=0x7f080003;
+        public static final int btnGetQR=0x7f080006;
+        public static final int btnObtieneDatos=0x7f080000;
         public static final int listView_pedidos=0x7f080002;
+        public static final int selectedItem=0x7f080005;
+        public static final int selectedItemTitle=0x7f080004;
         public static final int textView1=0x7f080001;
     }
     public static final class layout {
@@ -43,9 +49,12 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050002;
         public static final int app_name=0x7f050000;
+        public static final int btnActualiza=0x7f050005;
         public static final int btn_obtener_datos=0x7f050004;
         public static final int hello_world=0x7f050001;
         public static final int lista_pedidos=0x7f050003;
+        public static final int selectedItem=0x7f050006;
+        public static final int selectedItemValue=0x7f050007;
     }
     public static final class style {
         /** 

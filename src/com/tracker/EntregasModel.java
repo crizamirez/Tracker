@@ -10,9 +10,15 @@ public class EntregasModel {
     public String longitude;
     public String deliveryComment;
 	
-    @Override
+    /*@Override
 	public String toString() {
 		return "userID : " +userID + ", userEmail : " +userEmail + ", deliveryId : " +deliveryId + ", deliveryDesc : " +deliveryDesc + ", deliveryStatus : " +deliveryStatus + ", latitude : " +latitude + ", longitude : " +longitude + ", deliveryComment : " +deliveryComment;
+	}*/
+    
+    @Override
+	public String toString() {
+		//return "userID : " +userID + ", deliveryId : " +deliveryId + ", deliveryDesc : " +deliveryDesc + ", deliveryStatus : " +deliveryStatus;
+    	return "Usuario: " +userEmail + ", Pedido: " +deliveryDesc + ", Estado: " +deliveryStatus;
 	}
     
     

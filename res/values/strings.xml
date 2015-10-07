@@ -6,5 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="lista_pedidos">Lista de Pedidos</string>
     <string name="btn_obtener_datos">Obtener Datos</string>
+    <string name="btnActualiza">Actualizar</string>
+    <string name="selectedItem">Item Seleccionado</string>
+    <string name="selectedItemValue"></string>
 
 </resources>
