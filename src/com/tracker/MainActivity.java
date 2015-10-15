@@ -68,6 +68,7 @@ public class MainActivity extends Activity {
     String PedidoCode="";
     String separador=";";
     String concat="&";
+    Button btnActualiza;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class MainActivity extends Activity {
         Button btnObtieneDatos = (Button) findViewById(R.id.btnObtieneDatos);	
         btnObtieneDatos.setOnClickListener(btnListener);
         
-        final Button btnActualiza = (Button) findViewById(R.id.btnActualiza);
+        btnActualiza = (Button) findViewById(R.id.btnActualiza);
         btnActualiza.setOnClickListener(btnListener2);
         
         /*Descomentar cuando se pueda acceder a la web api*/
@@ -168,17 +169,17 @@ public class MainActivity extends Activity {
 					try {
 						client = new DefaultHttpClient(new BasicHttpParams());
 						result = client.execute(getreq, handler);
-						Log.e("Resultado=", (String) result);
-					
+						//Log.e("Resultado=", (String) result);
+						btnActualiza.setEnabled(false);
 						
 					} catch (ClientProtocolException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						Log.e("Usuario= ", e.getMessage());
+						//Log.e("Usuario= ", e.getMessage());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						Log.e("Usuario= ", e.getMessage());
+						//Log.e("Usuario= ", e.getMessage());
 					}
 					
 					client.getConnectionManager().shutdown();
