@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
         btnActualiza = (Button) findViewById(R.id.btnActualiza);
         
         btnActualiza = (Button) findViewById(R.id.btnActualiza);
-        btnActualiza.setEnabled(true); // false
+        btnActualiza.setEnabled(false);
         btnActualiza.setOnClickListener(btnListener2);
                                
         
