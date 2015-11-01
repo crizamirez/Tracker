@@ -69,7 +69,17 @@ public class MainActivity extends Activity {
     Button btnActualiza;
     double PedidoLong;
     double PedidoLat;
-	
+    int tiempo;
+    Button btnMaps;
+    Button btnObtieneDatos;
+    TextView selectedItem;
+    int userID;
+	int deliveryID;
+    
+    String serverUpdateData = "http://192.168.1.44:51229/api/updatedata?"; // 192.168.30.52 cac
+    String serverGetData = "http://192.168.1.44:51229/api/getdeliveriesdata"; // 192.168.30.52 cac
+    String serverGetPedidosGeoLocData = "http://192.168.1.44:51229/api/getDeliveryPositions?";
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,16 +92,17 @@ public class MainActivity extends Activity {
 	    }
 				
 		lista = (ListView)findViewById(R.id.listView_pedidos);
-		        
-        Button btnObtieneDatos = (Button) findViewById(R.id.btnObtieneDatos);	
-        btnObtieneDatos.setOnClickListener(btnListener);
-        	
-        btnActualiza = (Button) findViewById(R.id.btnActualiza);
-        
+		                	       
         btnActualiza = (Button) findViewById(R.id.btnActualiza);
         btnActualiza.setEnabled(false);
-        btnActualiza.setOnClickListener(btnListener2);
+        btnActualiza.setOnClickListener(btnActualizaDatosListener);
                                
+        btnMaps = (Button) findViewById(R.id.btnMaps);
+        btnMaps.setOnClickListener(btnObtieneMapaListener);
+		btnMaps.setEnabled(false);
+		
+		btnObtieneDatos = (Button) findViewById(R.id.btnObtieneDatos);
+		btnObtieneDatos.setOnClickListener(btnObtieneDatosListener);
         
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -102,15 +113,41 @@ public class MainActivity extends Activity {
 				model = (EntregasModel) lista.getItemAtPosition(arg2);
 				TextView selectedItem = (TextView) findViewById(R.id.selectedItem);
 				selectedItem.setText(model.deliveryDesc + ", estado: " + model.deliveryStatus);
+				
+				btnMaps.setEnabled(true);
 				btnActualiza.setEnabled(true);
+				
 				PedidoCode = new String (model.deliveryId + separador + model.userID + separador + model.deliveryStatus); 
 				PedidoLat = Double.valueOf(model.latitude);
 				PedidoLong = Double.valueOf(model.longitude);
+				
+				setUserID(model.userID);
+				setDeliveryID(model.deliveryId);
 			}
         	
 		});
         
 	
+	}
+	
+	protected void setDeliveryID(Integer deliveryId) {
+		this.deliveryID = deliveryId;
+		
+	}
+	
+	public int getDeliveryID(){
+		int deliveryId = this.deliveryID;
+		return deliveryId;
+	}
+
+	protected void setUserID(Integer user) {
+		this.userID = user;
+		
+	}
+	
+	protected int getUserID(){
+		int user = this.userID;
+		return user;
 	}
 	
     public void scanQR(View v) {
@@ -165,8 +202,11 @@ public class MainActivity extends Activity {
 						String param3=String.valueOf(model.userID);
 						String param4="NA";
 						
-						String enviaDatos = "http://192.168.0.17:51229/api/updatedata?n_estado=" + param1 + concat +
-								"delivery_id=" + param2 + concat + "user_id=" + param3 + concat + "comentario=" + param4;
+						/*String enviaDatos = "http://192.168.30.52:51229/api/updatedata?n_estado=" + param1 + concat +
+								"delivery_id=" + param2 + concat + "user_id=" + param3 + concat + "comentario=" + param4;*/
+						
+						String enviaDatos = serverUpdateData + "n_estado=" + param1 + concat +
+								"delivery_id=" + param2 + concat + "user_id=" + param3 + concat + "comentario=" + param4 ;
 												
 						HttpGet getreq = new HttpGet(enviaDatos);
 						
@@ -200,53 +240,83 @@ public class MainActivity extends Activity {
 				 
 	        }
 	    }
+	    
+	    btnActualiza.setEnabled(false);
     }
 	
-	
-	private OnClickListener btnListener = new OnClickListener()
+	private OnClickListener btnObtieneDatosListener = new OnClickListener()
 	{
+	
+   	 @Override
+   	 public void onClick(View v) {
+		  		 
+   		selectedItem = (TextView) findViewById(R.id.selectedItem);
+   		selectedItem.setText("");
+		btnActualiza.setEnabled(false);
+		btnMaps.setEnabled(false);
+   		 
+    	HttpParams params = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(params, 15000);
+		ResponseHandler<String> handler = new BasicResponseHandler();
+		Object result = new Object();
+		HttpClient client = new DefaultHttpClient(params);
 
-	    public void onClick(View v)
-	    {   
-	    	HttpParams params = new BasicHttpParams();
-	        HttpConnectionParams.setConnectionTimeout(params, 15000);
-			ResponseHandler<String> handler = new BasicResponseHandler();
-			Object result = new Object();
-			HttpClient client = new DefaultHttpClient(params);
+		HttpGet getreq = new HttpGet(serverGetData);
+			    
+	    try {
 
-			HttpGet getreq = new HttpGet("http://192.168.0.17:51229/api/getdeliveriesdata");
+			client = new DefaultHttpClient(new BasicHttpParams());
+			result = client.execute(getreq, handler);
 			
-			try {
+			String data = (String) result;
+    		Gson g = new Gson();
+    		Type t = new TypeToken<EntregasModel[]>(){}.getType();
+    		EntregasModel [] entregas = (EntregasModel[])g.fromJson(data, t);
 
-				client = new DefaultHttpClient(new BasicHttpParams());
-				result = client.execute(getreq, handler);
-				
-				String data = (String) result;
-	    		Gson g = new Gson();
-	    		Type t = new TypeToken<EntregasModel[]>(){}.getType();
-	    		EntregasModel [] entregas = (EntregasModel[])g.fromJson(data, t);
-
-	    		ArrayAdapter<EntregasModel> adapter = new ArrayAdapter<EntregasModel>(getApplicationContext(), android.R.layout.simple_spinner_item, entregas);
-	    		lista.setAdapter(adapter);
-	    		
-	    		
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Log.e("Usuario= ", e.getMessage());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Log.e("Usuario= ", e.getMessage());
-			}
-			
-			client.getConnectionManager().shutdown();
-	    } 
-
+    		ArrayAdapter<EntregasModel> adapter = new ArrayAdapter<EntregasModel>(getApplicationContext(), android.R.layout.simple_spinner_item, entregas);
+    		lista.setAdapter(adapter);
+    		
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			Log.e("Usuario= ", e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.e("Usuario= ", e.getMessage());
+		}
+	    
+		client.getConnectionManager().shutdown();
+        
+        
+   	 	}
+	
 	}; 
 	
-	 
-	private OnClickListener btnListener2 = new OnClickListener()
+	private OnClickListener btnObtieneMapaListener = new OnClickListener()
+	{
+	
+		@Override
+		public void onClick(View v) {
+		    
+		    try {	    
+			    
+		    	ArrayList<String> listLatLng;
+		    	
+		    	listLatLng = new ArrayList<String>(getPedidosGeoLoc());
+			    			    			    
+			    Intent mapIntent = new Intent(MainActivity.this, MapActivity.class);
+			    mapIntent.putStringArrayListExtra("listLatLng",listLatLng);
+			    startActivity(mapIntent);
+			    
+		    } catch (NullPointerException e){
+		    	Toast.makeText(getApplicationContext(), "userID= NULL", Toast.LENGTH_LONG).show();
+		    }
+			 
+		}
+	
+	}; 
+
+	
+	private OnClickListener btnActualizaDatosListener = new OnClickListener()
 	{
 	
 	    public void onClick(View v)
@@ -284,6 +354,56 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onBackPressed() {
+	}
+	
+	public ArrayList<String> getPedidosGeoLoc(){
+
+		HttpParams params = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(params, 15000);
+   		ResponseHandler<String> handler = new BasicResponseHandler();
+   		Object result = new Object();
+   		HttpClient client = new DefaultHttpClient(params);
+       
+   		String enviaDatos = serverGetPedidosGeoLocData + "userID=" + getUserID() + "&deliveryID=" + getDeliveryID();
+   		HttpGet getreq = new HttpGet(enviaDatos);
+   		
+   		ArrayList<String> listaPosiciones = new ArrayList<String>();
+   		EntregasGeoLocModel[] entregas = null;
+	   			           
+		try {
+
+	   			client = new DefaultHttpClient(new BasicHttpParams());
+	   			result = client.execute(getreq, handler);
+	   			
+	   			String data = (String) result;
+	       		Gson g = new Gson();
+	       		Type t = new TypeToken<EntregasGeoLocModel[]>(){}.getType();
+	       		entregas = (EntregasGeoLocModel[])g.fromJson(data, t);
+	       		
+		   		if (entregas.length > 0){
+		   			//ListLatLng = new ArrayList<LatLng>();
+		   			for (int i=0; i<entregas.length;i++){
+		   				listaPosiciones.add(String.valueOf(entregas[i].userID) + "," + String.valueOf(entregas[i].latitude) + "," + String.valueOf(entregas[i].longitude));	   				
+		   			}
+		   		}
+	       		
+	   		} catch (ClientProtocolException e) {
+	   			// TODO Auto-generated catch block
+	   			e.printStackTrace();
+	   			Log.e("Usuario= ", e.getMessage());
+	   		} catch (IOException e) {
+	   			// TODO Auto-generated catch block
+	   			e.printStackTrace();
+	   			Log.e("Usuario= ", e.getMessage());
+	   		}
+	   	    
+	   		client.getConnectionManager().shutdown();
+           		
+	   		return listaPosiciones;
 	}
 	
 	}

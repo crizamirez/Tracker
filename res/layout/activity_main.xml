@@ -21,7 +21,7 @@
         android:textColor="#CEE3F6" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textTitleGeolocation"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="false"
@@ -94,5 +94,14 @@
         android:layout_marginRight="17dp"
         android:layout_marginTop="28dp"
         android:layout_toLeftOf="@+id/selectedItemTitle" />
+
+    <Button
+        android:id="@+id/btnMaps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/textTitleGeolocation"
+        android:text="Mapa"
+        android:textColor="#CEE3F6" />
 
 </RelativeLayout>
